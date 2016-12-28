@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="xercesImpl-2.11.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/lib/xercesImpl-2.11.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/lib/xml-apis-1.4.01.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/lib/commons-lang3-3.3.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/lib/commons-logging.jar!/" />
+      <root url="file://$PROJECT_DIR$" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/src" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="httpcore-4.2.5">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/lib/httpcore-4.2.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/lib/httpclient-4.2.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/lib/httpclient-cache-4.2.6.jar!/" />
+      <root url="file://$PROJECT_DIR$" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/src" />
+    </SOURCES>
+  </library>
+</component>
