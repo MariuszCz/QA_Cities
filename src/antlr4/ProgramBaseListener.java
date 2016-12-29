@@ -52,6 +52,18 @@ public class ProgramBaseListener implements ProgramListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterRzeczownik(ProgramParser.RzeczownikContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRzeczownik(ProgramParser.RzeczownikContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterTyp(ProgramParser.TypContext ctx) { }
 	/**
 	 * {@inheritDoc}

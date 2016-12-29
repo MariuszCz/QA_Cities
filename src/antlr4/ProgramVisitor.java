@@ -29,6 +29,12 @@ public interface ProgramVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitCzasownik(ProgramParser.CzasownikContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link ProgramParser#rzeczownik}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRzeczownik(ProgramParser.RzeczownikContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ProgramParser#typ}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

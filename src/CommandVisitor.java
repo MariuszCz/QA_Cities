@@ -3,6 +3,7 @@ import antlr4.ProgramParser;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Created by Mariusz on 04.12.2016.
@@ -11,8 +12,10 @@ public class CommandVisitor extends ProgramBaseVisitor<String> {
     private String name;
     private String action;
     private String type;
-    private List<String> RUN = Arrays.asList("run", "open", "launch", "start", "go");
-    private List<String> CLOSE = Arrays.asList("close", "exit", "shut", "stop");
+    private String noun;
+
+    private List<String> ABSTRACT = Arrays.asList("lezy","jest","polozone","znajduje");
+    private List<String> AREA = Arrays.asList("powierzchnia","wielkosc");
 
     @Override
     public String visitNazwa(ProgramParser.NazwaContext ctx) {
@@ -30,13 +33,25 @@ public class CommandVisitor extends ProgramBaseVisitor<String> {
     public String visitTyp(ProgramParser.TypContext ctx) {
             try {
                 type = ctx.TYPE_WORD().getText();
-                visitCzasownik(ctx.czasownik());
+                visitRzeczownik(ctx.rzeczownik());
                 return ctx.TYPE_WORD().getText();
             }catch (Exception ex) {
                 System.out.print("city: " + ex.getMessage());
             }
             return "";
         }
+
+    @Override
+    public String visitRzeczownik(ProgramParser.RzeczownikContext ctx) {
+        try {
+            noun = ctx.NOUN().getText();
+            visitCzasownik(ctx.czasownik());
+            return ctx.NOUN().getText();
+        }catch (Exception ex) {
+            System.out.print("city: " + ex.getMessage());
+        }
+        return "";
+    }
     @Override
     public String visitCzasownik(ProgramParser.CzasownikContext ctx) {
         try {
@@ -77,20 +92,66 @@ public class CommandVisitor extends ProgramBaseVisitor<String> {
     }
 
     private void chooseType() {
-        if(type.equals("miasto")) {
+        if(patternCity(type)) {
             goToCity();
-            System.out.print(type);
-        } else if(type.equals("osoba")) {
+        } else if(patternPerson(type)) {
             goToPerson();
         }
     }
 
     private void goToCity() {
         Controller controller = new Controller();
-        controller.getCityInformations(name, "abstract");
+        if(patternAbout(action) || patternAbout2(noun)) {
+            controller.getCityInformations(name, "abstract");
+        }
+        if(patternPopulation(noun)) {
+            controller.getCityInformations(name, "populationTotal");
+        }
+        if(patternArea(noun)) {
+            controller.getCityInformations(name, "areaTotalKm");
+        }
+        if(patternPoint(noun)) {
+            controller.getCityInformations(name, "point");
+        }
     }
     private void goToPerson() {
         Controller controller = new Controller();
         controller.getCityInformations(name, "abstract");
     }
+
+    private boolean patternCity(String pattern) {
+        Pattern pattern1 = Pattern.compile("(miast|miesc).*[a-z].*");
+        return pattern1.matcher(pattern).find();
+    }
+
+    private boolean patternPerson(String pattern) {
+        Pattern pattern1 = Pattern.compile("(osob).*[a-z].*");
+        return pattern1.matcher(pattern).find();
+    }
+
+    private boolean patternAbout(String pattern) {
+        Pattern pattern1 = Pattern.compile("(lez|znajduj).*[a-z].*");
+        return pattern1.matcher(pattern).find();
+    }
+
+    private boolean patternAbout2(String pattern) {
+        Pattern pattern1 = Pattern.compile("(poloz).*[a-z].*");
+        return pattern1.matcher(pattern).find();
+    }
+
+    private boolean patternPopulation(String pattern) {
+        Pattern pattern1 = Pattern.compile("(lud).*[a-z].*");
+        return pattern1.matcher(pattern).find();
+    }
+
+    private boolean patternArea(String pattern) {
+        Pattern pattern1 = Pattern.compile("(powierz).*[a-z].*");
+        return pattern1.matcher(pattern).find();
+    }
+
+    private boolean patternPoint(String pattern) {
+        Pattern pattern1 = Pattern.compile("(wsp).*[a-z].*");
+        return pattern1.matcher(pattern).find();
+    }
+
 }

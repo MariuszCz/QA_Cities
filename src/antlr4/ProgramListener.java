@@ -38,6 +38,16 @@ public interface ProgramListener extends ParseTreeListener {
 	 */
 	void exitCzasownik(ProgramParser.CzasownikContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link ProgramParser#rzeczownik}.
+	 * @param ctx the parse tree
+	 */
+	void enterRzeczownik(ProgramParser.RzeczownikContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ProgramParser#rzeczownik}.
+	 * @param ctx the parse tree
+	 */
+	void exitRzeczownik(ProgramParser.RzeczownikContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ProgramParser#typ}.
 	 * @param ctx the parse tree
 	 */

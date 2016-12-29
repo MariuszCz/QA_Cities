@@ -51,7 +51,8 @@ public class Controller {
         ParameterizedSparqlString qs = new ParameterizedSparqlString( "" +
                 " PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
                 " PREFIX dbo: <http://dbpedia.org/ontology/>\n" +
-                " PREFIX dbp: <http://dbpedia.org/resource/>\n" +
+                " PREFIX dbp: <http://dbpedia.org/property/>\n" +
+                " PREFIX geo: <http://www.georss.org/georss/>\n" +
                 " select *  where {\n" +
                 " ?city rdfs:label ?label .\n" +
                 " ?city dbo:abstract ?abstract .\n" +
@@ -62,6 +63,12 @@ public class Controller {
                 " OPTIONAL{\n"+
                 " ?city dbo:knownFor ?knownfor .\n"+
                 "}\n"+
+                " OPTIONAL{\n"+
+                " ?city dbo:areaTotal ?areaTotalKm .\n"+
+                "}\n"+
+                " OPTIONAL{\n"+
+                " ?city geo:point ?point .\n"+
+                "}\n"+
                 " FILTER ( lang(?abstract) = 'pl')\n"+
                 "}\n"
         );
@@ -69,7 +76,7 @@ public class Controller {
         Literal city = ResourceFactory.createLangLiteral( name, "pl" );
         qs.setParam( "label", city );
 
-       // System.out.println( qs );
+    //    System.out.println( qs );
 
         QueryExecution exec = QueryExecutionFactory.sparqlService( "http://dbpedia.org/sparql", qs.asQuery() );
 
@@ -78,7 +85,9 @@ public class Controller {
         while ( results.hasNext() ) {
             QuerySolution sol = (QuerySolution) results.next();
            // outputText.setText(sol.get("?abstract").toString());
-            System.out.println(sol.get(field));
+            String out = sol.get(field).toString();
+          //  outputText.setText(out);
+            System.out.println(out);
         }
     }
 }

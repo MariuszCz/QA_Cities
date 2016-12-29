@@ -17,18 +17,18 @@ public class ProgramParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		QUESTION_WORD=1, TYPE_WORD=2, LOCATION=3, TEXT=4, WHITESPACE=5;
+		QUESTION_WORD=1, TYPE_WORD=2, LOCATION=3, NOUN=4, TEXT=5, WHITESPACE=6;
 	public static final int
-		RULE_innyTekst = 0, RULE_pytajnik = 1, RULE_czasownik = 2, RULE_typ = 3, 
-		RULE_nazwa = 4, RULE_question = 5;
+		RULE_innyTekst = 0, RULE_pytajnik = 1, RULE_czasownik = 2, RULE_rzeczownik = 3, 
+		RULE_typ = 4, RULE_nazwa = 5, RULE_question = 6;
 	public static final String[] ruleNames = {
-		"innyTekst", "pytajnik", "czasownik", "typ", "nazwa", "question"
+		"innyTekst", "pytajnik", "czasownik", "rzeczownik", "typ", "nazwa", "question"
 	};
 
 	private static final String[] _LITERAL_NAMES = {
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
-		null, "QUESTION_WORD", "TYPE_WORD", "LOCATION", "TEXT", "WHITESPACE"
+		null, "QUESTION_WORD", "TYPE_WORD", "LOCATION", "NOUN", "TEXT", "WHITESPACE"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -110,17 +110,17 @@ public class ProgramParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(15);
+			setState(17);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==TEXT) {
 				{
 				{
-				setState(12);
+				setState(14);
 				match(TEXT);
 				}
 				}
-				setState(17);
+				setState(19);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -164,7 +164,7 @@ public class ProgramParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(18);
+			setState(20);
 			match(QUESTION_WORD);
 			}
 		}
@@ -212,11 +212,11 @@ public class ProgramParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(20);
-			pytajnik();
-			setState(21);
-			innyTekst();
 			setState(22);
+			pytajnik();
+			setState(23);
+			innyTekst();
+			setState(24);
 			match(LOCATION);
 			}
 		}
@@ -231,9 +231,56 @@ public class ProgramParser extends Parser {
 		return _localctx;
 	}
 
-	public static class TypContext extends ParserRuleContext {
+	public static class RzeczownikContext extends ParserRuleContext {
 		public CzasownikContext czasownik() {
 			return getRuleContext(CzasownikContext.class,0);
+		}
+		public TerminalNode NOUN() { return getToken(ProgramParser.NOUN, 0); }
+		public RzeczownikContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_rzeczownik; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ProgramListener ) ((ProgramListener)listener).enterRzeczownik(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ProgramListener ) ((ProgramListener)listener).exitRzeczownik(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ProgramVisitor ) return ((ProgramVisitor<? extends T>)visitor).visitRzeczownik(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final RzeczownikContext rzeczownik() throws RecognitionException {
+		RzeczownikContext _localctx = new RzeczownikContext(_ctx, getState());
+		enterRule(_localctx, 6, RULE_rzeczownik);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(26);
+			czasownik();
+			setState(27);
+			match(NOUN);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class TypContext extends ParserRuleContext {
+		public RzeczownikContext rzeczownik() {
+			return getRuleContext(RzeczownikContext.class,0);
 		}
 		public InnyTekstContext innyTekst() {
 			return getRuleContext(InnyTekstContext.class,0);
@@ -260,15 +307,15 @@ public class ProgramParser extends Parser {
 
 	public final TypContext typ() throws RecognitionException {
 		TypContext _localctx = new TypContext(_ctx, getState());
-		enterRule(_localctx, 6, RULE_typ);
+		enterRule(_localctx, 8, RULE_typ);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(24);
-			czasownik();
-			setState(25);
+			setState(29);
+			rzeczownik();
+			setState(30);
 			innyTekst();
-			setState(26);
+			setState(31);
 			match(TYPE_WORD);
 			}
 		}
@@ -312,15 +359,15 @@ public class ProgramParser extends Parser {
 
 	public final NazwaContext nazwa() throws RecognitionException {
 		NazwaContext _localctx = new NazwaContext(_ctx, getState());
-		enterRule(_localctx, 8, RULE_nazwa);
+		enterRule(_localctx, 10, RULE_nazwa);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(28);
+			setState(33);
 			typ();
-			setState(29);
+			setState(34);
 			match(TEXT);
-			setState(30);
+			setState(35);
 			innyTekst();
 			}
 		}
@@ -363,22 +410,22 @@ public class ProgramParser extends Parser {
 
 	public final QuestionContext question() throws RecognitionException {
 		QuestionContext _localctx = new QuestionContext(_ctx, getState());
-		enterRule(_localctx, 10, RULE_question);
+		enterRule(_localctx, 12, RULE_question);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(35);
+			setState(40);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==QUESTION_WORD) {
 				{
 				{
-				setState(32);
+				setState(37);
 				nazwa();
 				}
 				}
-				setState(37);
+				setState(42);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -396,16 +443,17 @@ public class ProgramParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\7)\4\2\t\2\4\3\t"+
-		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\3\2\7\2\20\n\2\f\2\16\2\23\13\2\3\3"+
-		"\3\3\3\4\3\4\3\4\3\4\3\5\3\5\3\5\3\5\3\6\3\6\3\6\3\6\3\7\7\7$\n\7\f\7"+
-		"\16\7\'\13\7\3\7\2\2\b\2\4\6\b\n\f\2\2$\2\21\3\2\2\2\4\24\3\2\2\2\6\26"+
-		"\3\2\2\2\b\32\3\2\2\2\n\36\3\2\2\2\f%\3\2\2\2\16\20\7\6\2\2\17\16\3\2"+
-		"\2\2\20\23\3\2\2\2\21\17\3\2\2\2\21\22\3\2\2\2\22\3\3\2\2\2\23\21\3\2"+
-		"\2\2\24\25\7\3\2\2\25\5\3\2\2\2\26\27\5\4\3\2\27\30\5\2\2\2\30\31\7\5"+
-		"\2\2\31\7\3\2\2\2\32\33\5\6\4\2\33\34\5\2\2\2\34\35\7\4\2\2\35\t\3\2\2"+
-		"\2\36\37\5\b\5\2\37 \7\6\2\2 !\5\2\2\2!\13\3\2\2\2\"$\5\n\6\2#\"\3\2\2"+
-		"\2$\'\3\2\2\2%#\3\2\2\2%&\3\2\2\2&\r\3\2\2\2\'%\3\2\2\2\4\21%";
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\b.\4\2\t\2\4\3\t"+
+		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\3\2\7\2\22\n\2\f\2\16\2\25"+
+		"\13\2\3\3\3\3\3\4\3\4\3\4\3\4\3\5\3\5\3\5\3\6\3\6\3\6\3\6\3\7\3\7\3\7"+
+		"\3\7\3\b\7\b)\n\b\f\b\16\b,\13\b\3\b\2\2\t\2\4\6\b\n\f\16\2\2(\2\23\3"+
+		"\2\2\2\4\26\3\2\2\2\6\30\3\2\2\2\b\34\3\2\2\2\n\37\3\2\2\2\f#\3\2\2\2"+
+		"\16*\3\2\2\2\20\22\7\7\2\2\21\20\3\2\2\2\22\25\3\2\2\2\23\21\3\2\2\2\23"+
+		"\24\3\2\2\2\24\3\3\2\2\2\25\23\3\2\2\2\26\27\7\3\2\2\27\5\3\2\2\2\30\31"+
+		"\5\4\3\2\31\32\5\2\2\2\32\33\7\5\2\2\33\7\3\2\2\2\34\35\5\6\4\2\35\36"+
+		"\7\6\2\2\36\t\3\2\2\2\37 \5\b\5\2 !\5\2\2\2!\"\7\4\2\2\"\13\3\2\2\2#$"+
+		"\5\n\6\2$%\7\7\2\2%&\5\2\2\2&\r\3\2\2\2\')\5\f\7\2(\'\3\2\2\2),\3\2\2"+
+		"\2*(\3\2\2\2*+\3\2\2\2+\17\3\2\2\2,*\3\2\2\2\4\23*";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
