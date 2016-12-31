@@ -9,18 +9,23 @@ import java.util.regex.Pattern;
  * Created by Mariusz on 04.12.2016.
  */
 public class CommandVisitor extends ProgramBaseVisitor<String> {
-    private String name;
-    private String action;
-    private String type;
-    private String noun;
-
-    private List<String> ABSTRACT = Arrays.asList("lezy","jest","polozone","znajduje");
-    private List<String> AREA = Arrays.asList("powierzchnia","wielkosc");
+    private String name="";
+    private String action="";
+    private String type="";
+    private String noun="";
+    private String surname="";
+    private String questionType="";
 
     @Override
     public String visitNazwa(ProgramParser.NazwaContext ctx) {
         try {
-            name = ctx.TEXT().getText();
+            if(ctx.TEXT().size()>1) {
+                name = ctx.TEXT().get(0).getText();
+                surname = ctx.TEXT().get(1).getText();
+            }
+            else {
+                name = ctx.TEXT().get(0).getText();
+            }
             visitTyp(ctx.typ());
             return name;
         } catch (Exception ex) {
@@ -32,9 +37,11 @@ public class CommandVisitor extends ProgramBaseVisitor<String> {
     @Override
     public String visitTyp(ProgramParser.TypContext ctx) {
             try {
-                type = ctx.TYPE_WORD().getText();
+                if(ctx.TYPE_WORD().size()>0) {
+                    type = ctx.TYPE_WORD().get(0).getText();
+                }
                 visitRzeczownik(ctx.rzeczownik());
-                return ctx.TYPE_WORD().getText();
+                return "";
             }catch (Exception ex) {
                 System.out.print("city: " + ex.getMessage());
             }
@@ -44,9 +51,11 @@ public class CommandVisitor extends ProgramBaseVisitor<String> {
     @Override
     public String visitRzeczownik(ProgramParser.RzeczownikContext ctx) {
         try {
-            noun = ctx.NOUN().getText();
+            if(ctx.NOUN().size()>0) {
+                noun = ctx.NOUN().get(0).getText();
+            }
             visitCzasownik(ctx.czasownik());
-            return ctx.NOUN().getText();
+            return "";
         }catch (Exception ex) {
             System.out.print("city: " + ex.getMessage());
         }
@@ -67,6 +76,7 @@ public class CommandVisitor extends ProgramBaseVisitor<String> {
     @Override
     public String visitPytajnik(ProgramParser.PytajnikContext ctx) {
         try {
+                questionType = ctx.QUESTION_WORD().getText();
                 chooseType();
                 return ctx.QUESTION_WORD().getText();
         } catch (Exception ex) {
@@ -92,9 +102,15 @@ public class CommandVisitor extends ProgramBaseVisitor<String> {
     }
 
     private void chooseType() {
+        if(!surname.equals("")) {
+            name = name + " " + surname;
+        }
         if(patternCity(type)) {
             goToCity();
         } else if(patternPerson(type)) {
+            goToPerson();
+        } else {
+            goToCity();
             goToPerson();
         }
     }
@@ -113,14 +129,50 @@ public class CommandVisitor extends ProgramBaseVisitor<String> {
         if(patternPoint(noun)) {
             controller.getCityInformations(name, "point");
         }
+        if(patternCode(noun)) {
+            controller.getCityInformations(name, "postalCode");
+        }
+        if(patternTimeZone(noun)) {
+            controller.getCityInformations(name, "timeZone");
+        }
+        if(patternCountry(noun)) {
+            controller.getCityInformations(name, "country");
+        }
+        if(patternPart(noun)) {
+            controller.getCityInformations(name, "part");
+        }
+        if(patternImage(action)) {
+            controller.getCityInformations(name, "thumbnail");
+        }
     }
     private void goToPerson() {
         Controller controller = new Controller();
-        controller.getCityInformations(name, "abstract");
+        if(questionType.compareToIgnoreCase("Kim")==0) {
+            controller.getPersonInformations(name, "abstract");
+        }
+        if(patternBirthDate(action) && questionType.compareToIgnoreCase("Kiedy")==0) {
+            controller.getPersonInformations(name, "birthDate");
+        }
+        if(patternDeathDate(action) && questionType.compareToIgnoreCase("Kiedy")==0) {
+            controller.getPersonInformations(name, "deathDate");
+        }
+        if(patternBirthDate(action) && questionType.compareToIgnoreCase("Gdzie")==0) {
+            controller.getPersonInformations(name, "birthPlace");
+        }
+        if(patternDeathDate(action) && questionType.compareToIgnoreCase("Gdzie")==0) {
+            controller.getPersonInformations(name, "deathPlace");
+        }
+        if(patternSpouse(noun)) {
+            controller.getPersonInformations(name, "spouse");
+        }
+        if(patternImage(action)) {
+            controller.getPersonInformations(name, "depiction");
+        }
+
     }
 
     private boolean patternCity(String pattern) {
-        Pattern pattern1 = Pattern.compile("(miast|miesc).*[a-z].*");
+        Pattern pattern1 = Pattern.compile("(miast|miesc|miejsc).*[a-z].*");
         return pattern1.matcher(pattern).find();
     }
 
@@ -140,7 +192,7 @@ public class CommandVisitor extends ProgramBaseVisitor<String> {
     }
 
     private boolean patternPopulation(String pattern) {
-        Pattern pattern1 = Pattern.compile("(lud).*[a-z].*");
+        Pattern pattern1 = Pattern.compile("(lud|mieszk).*[a-z].*");
         return pattern1.matcher(pattern).find();
     }
 
@@ -154,4 +206,43 @@ public class CommandVisitor extends ProgramBaseVisitor<String> {
         return pattern1.matcher(pattern).find();
     }
 
+    private boolean patternCode(String pattern) {
+        Pattern pattern1 = Pattern.compile("(ko|poczt).*[a-z].*");
+        return pattern1.matcher(pattern).find();
+    }
+
+    private boolean patternTimeZone(String pattern) {
+        Pattern pattern1 = Pattern.compile("(stref|cza).*[a-z].*");
+        return pattern1.matcher(pattern).find();
+    }
+
+    private boolean patternCountry(String pattern) {
+        Pattern pattern1 = Pattern.compile("(kra|panst).*[a-z].*");
+        return pattern1.matcher(pattern).find();
+    }
+
+    private boolean patternPart(String pattern) {
+        Pattern pattern1 = Pattern.compile("(dzielni|rejo).*[a-z].*");
+        return pattern1.matcher(pattern).find();
+    }
+
+    private boolean patternBirthDate(String pattern) {
+        Pattern pattern1 = Pattern.compile("(urodz).*[a-z].*");
+        return pattern1.matcher(pattern).find();
+    }
+
+    private boolean patternDeathDate(String pattern) {
+        Pattern pattern1 = Pattern.compile("(zmar|umar).*[a-z].*");
+        return pattern1.matcher(pattern).find();
+    }
+
+    private boolean patternSpouse(String pattern) {
+        Pattern pattern1 = Pattern.compile("(malz|zon|mez).*[a-z].*");
+        return pattern1.matcher(pattern).find();
+    }
+
+    private boolean patternImage(String pattern) {
+        Pattern pattern1 = Pattern.compile("(wygla).*[a-z].*");
+        return pattern1.matcher(pattern).find();
+    }
 }
